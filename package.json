@@ -1,0 +1,7 @@
+{
+    "name": "nodejs-api-sample",
+    "version": "1.0.0",
+    "description": "An example of making a Node.js API server",
+    "author": "Nic Raboy",
+    "license": "MIT"
+}

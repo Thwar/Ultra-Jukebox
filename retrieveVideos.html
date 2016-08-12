@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>title</title>
+    <style>
+        .red, #cue {
+            color: red;
+        }
+
+        .modal-dialog {
+            width: 100% !important;
+            padding: 10px !important;
+            margin: 0 auto !important;
+        }
+
+        .active {
+            background-color: #eee;
+        }
+
+
+        .accordion-1 {
+            display: none;
+        }
+
+        .accordionLink {
+            width: 100%;
+            height: 100%;
+            display: block;
+            padding: 15px;
+        }
+
+
+    </style>
+    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="../jquery/dist/jquery.min.js"></script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../socket.io-client/socket.io.js"></script>
+    <script src="../bootbox/bootbox.min.js"></script>
+    <script src="js/retrieve.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+
+
+    <script>
+
+        $(function () {
+
+
+
+        });
+
+    </script>
+</head>
+<body>
+    <ul id="menu" class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="todos" href="#">Todos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="internacional" href="#">internacional</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pop" href="#">pop</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cumbias" href="#">cumbias</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="electronica" href="#">electronica</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="hiphop" href="#">hiphop</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="reggaeton" href="#">reggaeton</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="romanticas" href="#">romanticas</a>
+        </li>
+    </ul>
+    <div class="container">
+
+        <div class="row">
+            
+            <div class="col-md-6 col-md-offset-3">
+                <h1>Ultra Jukebox</h1>
+                <form id="searchVideo" action="#">
+                    <p><input type="text" id="search" placeholder="Buscar video..." autocomplete="off" class="form-control" /></p>
+                    <p><input type="submit" value="Buscar" class="form-control btn btn-primary w100"></p>
+                </form>
+                <hr/>
+                <div id="results"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Seleccionar Video</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <form id="videoForm" role="form">
+                        <div class="form-group">
+                            <label for="video">Video:</label>
+                            <div id="modalVideoName"></div>
+                            <br />
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre" placeholder="Ingresa tu nombre" />
+                            <span class="red" id="errorMsg"></span>
+                            <br />
+                            <label for="costo">Costo:</label>
+                            10 pesos
+                        </div>
+
+                        <button type="submit" class="btn btn-default">Submittir video</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

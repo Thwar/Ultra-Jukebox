@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>title</title>
+    <style>
+        table {
+            width: 100%;
+        }
+
+            table tr {
+                height: auto !important;
+            }
+    </style>
+
+    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../animatedTableSort/style.css">
+
+    <script src="../jquery/dist/jquery.min.js"></script>
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../socket.io-client/socket.io.js"></script>
+    <script src="../animatedTableSort/tsort.js"></script>
+    <script src="../date.format/date.format.min.js"></script>
+    <script src="../bootbox/bootbox.min.js"></script>
+
+
+    <script>
+        $(function () {
+            //Listener for new video requests
+            var socket = io.connect();
+            socket.on('insert', function (data, id) {
+                var date = new Date(data.date);
+                var time = date.getTime();
+                date = date.format('M jS, Y g:i:s A');
+
+                $("#videoRow").append("<tr id='" + id + "' ><td>"
+                            + id + "<br/><button data-personname='" + data.person + "'  id='" + id + "' name='" + data.name + "' class='approve' type='button'>Approvar</button><button id='" + id + "' name='" + data.name + "' class='delete'>Eliminar</button></td> <td data-sortAs=" + time + ">" + date + " <br/>"
+                            + data.name + "<br/>" + data.person + "  </td></tr>");
+
+                $('#myTable').tableSort(); //enable sort
+            });
+
+
+
+
+
+            //Initialize data
+            var myUrl = window.location.href
+            myUrl = myUrl.substring(0, myUrl.lastIndexOf("/"));
+
+            //On click APPROVAR button
+            $(document).on('click', ".approve", function (e) {
+                var videoId = this.id;
+                var videoName = this.name;
+                var personName = this.attributes["data-personname"].nodeValue;
+
+                bootbox.confirm("Approve " + this.name + " video?", function (result) {
+                    if (result) {
+
+                        var data = {};
+                        data.id = videoId;
+                        data.videoName = videoName;
+                        data.personName = personName;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: myUrl + '/approveVideoFromQueue',
+                            data: data,
+                            datatype: 'json',
+                            success: function (data) {
+                                bootbox.alert('approved' + videoId);
+                                $("#" + videoId).remove();
+                                $('#myTable').tableSort();
+                            }
+                        });
+                    }
+                });
+            });
+
+            //On click ELIMINAR button
+            $(document).on('click', ".delete", function (e) {
+                var videoId = this.id;
+                bootbox.confirm("Eliminar " + this.name + " video?", function (result) {
+                    if (result) {
+
+                        var data = {};
+                        data.id = videoId;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: myUrl + '/deleteVideoFromQueue',
+                            data: data,
+                            datatype: 'json',
+                            success: function (data) {
+                                bootbox.alert(data);
+                                $("#" + videoId).remove();
+                                $('#myTable').tableSort();
+                            }
+                        });
+                    }
+                });
+            });
+
+            //Get videos waiting to be approved
+            $.ajax({
+                type: 'GET',
+                url: myUrl + '/getCurrentQueue',
+                success: function (data) {
+
+                    var dataObj = JSON.parse(data);
+
+                    $.each(dataObj, function (index, value) {
+                        var date = new Date(value.date);
+                        var time = date.getTime();
+                        date = date.format('M jS, Y g:i:s A');
+
+                        $("#videoRow").append("<tr id='" + value.idcue + "' ><td>"
+                            + value.idcue + "<br/><button data-personName='" + value.person + "'   id='" + value.idcue + "' name='" + value.name + "' class='approve' type='button'>Approvar</button><button id='" + value.idcue + "' name='" + value.name + "' class='delete'>Eliminar</button></td> <td data-sortAs=" + time + ">" + date + " <br/>"
+                            + value.name + "<br/>" + value.person + "  </td></tr>");
+                    });
+                    $('#myTable').tableSort();//enable sort
+                }
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+    <h2>Administracion</h2>
+    <p>Videos para confirmar requieren pago.</p>
+    <div class="">
+        <table id="myTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre del video</th>
+                </tr>
+            </thead>
+            <tbody id="videoRow"></tbody>
+        </table>
+    </div>
+
+</body>
+</html>
